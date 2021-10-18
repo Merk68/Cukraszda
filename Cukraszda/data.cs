@@ -52,5 +52,18 @@ namespace Cukraszda
       this.ar = ar;
       this.egysegnev = egysegnev;
     }
+    public data(string adatok)
+    {
+      string[] a = adatok.Split(';');
+      Snev = a[0];
+      Stipus = a[1];
+      dijase = Convert.ToBoolean(a[2]);
+      ar = Convert.ToInt32(a[3]);
+      egysegnev = a[4];
+    }
+    public override string ToString()
+    {
+      return $"{Snev};{ar};{egysegnev}";
+    }
   }
 }

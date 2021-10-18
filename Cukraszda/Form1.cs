@@ -24,14 +24,54 @@ namespace Cukraszda
       Legolcsobbsuti();
       beiras();
       beirascsv();
+      HatodikFeladat();
+      hetedikfeladat();
+    }
+
+    private void hetedikfeladat()
+    {
+      
+    }
+
+    private void HatodikFeladat()
+    {
+      Dictionary<string, int> stat = new Dictionary<string, int>();
+      foreach (var l in lista)
+      {
+        if (stat.ContainsKey(l.Stipus))
+        {
+          stat[l.Stipus]++;
+        }
+        else
+        {
+          stat.Add(l.Stipus, 1);
+        }
+
+        StreamWriter ki = new StreamWriter("stat.csv");
+        foreach (var d in stat)
+        {
+          ki.WriteLine($"{d.Key};{d.Value}");
+        }
+        ki.Close();
+      }
     }
 
     private void beirascsv()
     {
-      StreamWriter kicsv = new StreamWriter("stat.csv");
+      List<string> kifele = new List<string>();
       foreach (var l in lista)
       {
-        kicsv.WriteLine(l.Stipus + " " + l.Stipus);
+        if (!kifele.Contains($"{l.Snev} {l.Stipus}".ToUpper()));
+        {
+          kifele.Add($"{l.Snev} {l.Stipus}".ToUpper());
+        }
+      }
+      kifele.Sort();
+
+      StreamWriter kicsv = new StreamWriter("lista.txt");
+      foreach (var l in lista)
+      {
+        kicsv.WriteLine(l);
       }
       kicsv.Close();
     }
@@ -48,18 +88,18 @@ namespace Cukraszda
 
     private void Legolcsobbsuti()
     {
-      int haha = 0;
-      int min = 0;
-      for (int i = 1; i < lista.Count; i++)
+      string haha = "";
+      int min = int.MaxValue;
+      for (int i = 0; i < lista.Count; i++)
       {
         if (lista[i].Ar < min)
         {
-          haha = i;
+          haha = lista[i].Snev;
           min = lista[i].Ar;
         }
       }
-      tbLegolcsobb.Text = $"{lista[haha].Snev}";
-      tbLegolcsobbar.Text = $"{lista[haha].Ar} Ft/24 szeletes";
+      tbLegolcsobb.Text = $"{haha}";
+      tbLegolcsobbar.Text = $"{min} Ft/24 szeletes";
     }
 
     private void Legdaragabbsuti()
@@ -93,7 +133,7 @@ namespace Cukraszda
 
     private void randomsuti()
     {
-      Random r = new Random();
+      Random r = new Random(); //Guid.NewGuid().GetHashCode()nagyonrn
       int genRand = r.Next(lista.Count);
       Console.WriteLine($"Egy süti: {genRand}");
       tbMaiajanlat.Text = $"Mai ajánlatunk: {lista[genRand].Snev}";
@@ -128,6 +168,77 @@ namespace Cukraszda
     private void label7_Click(object sender, EventArgs e)
     {
 
+    }
+
+    private void bAjanlatment_Click(object sender, EventArgs e)
+    {
+      if (tbSutitipus.Text == "")
+      {
+        MessageBox.Show("Nem írtál be típust");
+      }
+      else
+      {
+        List<data> ajanlat = new List<data>();
+        foreach (var l in lista)
+        {
+          if (l.Stipus == tbSutitipus.Text)
+          {
+            ajanlat.Add(l);
+          }
+        }
+        if (ajanlat.Count == 0)
+        {
+          MessageBox.Show("Nincs ilyen süti. Válassz mást!");
+        }
+        else
+        {
+          try
+          {
+            StreamWriter ki = new StreamWriter("ajanlat.txt");
+            
+            foreach (var a in ajanlat)
+            {
+              ki.WriteLine(a.ToString());
+            }
+            int ossz = 0;
+            foreach (var a in ajanlat)
+            {
+              ki.WriteLine(a.ToString());
+              ossz += a.Ar;
+            }
+            ki.Close();
+            MessageBox.Show($"{tbSutitipus.Text} tipusu sutemenyek atlagara {(double)ossz / ajanlat.Count:n2}");
+          }
+          catch (Exception ex)
+          {
+            MessageBox.Show(ex.Message);
+            
+          }
+        }
+      }
+    }
+
+    private void bUjsuti_Click(object sender, EventArgs e)
+    {
+      if (tbSutineve.Text == "" || tbSutitipusa.Text == "" ||tbEgyseg.Text == "" || tbAr.Text == "")
+      {
+        MessageBox.Show("nem adtál meg minden adatot!");
+      }
+      else
+      {
+        int ar;
+        if (int.TryParse(tbAr.Text, out ar))
+        {
+          data uj = new data(tbSutineve.Text, tbSutitipusa.Text, cbDijazott.Checked, ar, tbEgyseg.Text);
+          lista.Add(uj);
+          StreamWriter ki = new StreamWriter("cuki.txt", true);
+        }
+        else
+        {
+          MessageBox.Show("Az uj sutemeny ara nem jó!");
+          tbAr.Focus();
+        }
+      }
     }
   }
 }

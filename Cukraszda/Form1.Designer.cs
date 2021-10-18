@@ -162,6 +162,7 @@ namespace Cukraszda
       this.bAjanlatment.TabIndex = 2;
       this.bAjanlatment.Text = "Ajánlat mentése";
       this.bAjanlatment.UseVisualStyleBackColor = true;
+      this.bAjanlatment.Click += new System.EventHandler(this.bAjanlatment_Click);
       // 
       // pictureBox1
       // 
@@ -240,6 +241,7 @@ namespace Cukraszda
       this.bUjsuti.TabIndex = 7;
       this.bUjsuti.Text = "Új süti felvétele";
       this.bUjsuti.UseVisualStyleBackColor = true;
+      this.bUjsuti.Click += new System.EventHandler(this.bUjsuti_Click);
       // 
       // tbSutineve
       // 
